@@ -66,6 +66,7 @@ export const services: Service[] = [
 
 export interface CaseStudy {
   no: string;
+  slug: string;
   title: string;
   category: string;
   description: string;
@@ -75,6 +76,7 @@ export interface CaseStudy {
 export const caseStudies: CaseStudy[] = [
   {
     no: "01",
+    slug: "aperture",
     title: "Premium E-Commerce Experience",
     category: "Retail · Web App",
     description:
@@ -83,6 +85,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     no: "02",
+    slug: "sequence",
     title: "Corporate Lead-Generation Platform",
     category: "B2B · Marketing Site",
     description:
@@ -91,6 +94,7 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     no: "03",
+    slug: "depth",
     title: "Data-Driven Web Application Dashboard",
     category: "SaaS · Product Design",
     description:

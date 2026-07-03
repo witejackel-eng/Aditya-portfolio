@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import Reveal from "./Reveal";
 import { caseStudies } from "@/lib/data";
@@ -65,49 +66,50 @@ export default function Work() {
 
       <div className="grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-8">
         {caseStudies.map((project, i) => (
-          <motion.div
-            key={project.no}
-            whileHover={{ y: -10, scale: 1.015 }}
-            transition={{ type: "spring", stiffness: 260, damping: 22 }}
-            className="group cursor-pointer"
-          >
+          <Link key={project.no} href={`/work/${project.slug}`} className="block">
             <motion.div
-              whileHover={{ boxShadow: "0 30px 60px -20px rgba(0,0,0,0.6)" }}
+              whileHover={{ y: -10, scale: 1.015 }}
+              transition={{ type: "spring", stiffness: 260, damping: 22 }}
+              className="group cursor-pointer"
             >
-              <LayoutMock variant={i} />
-            </motion.div>
-
-            <div className="mt-6 flex items-baseline justify-between">
-              <Reveal
-                as="span"
-                className="font-sans text-xs uppercase tracking-mega text-muted"
+              <motion.div
+                whileHover={{ boxShadow: "0 30px 60px -20px rgba(0,0,0,0.6)" }}
               >
-                {project.no} — {project.category}
-              </Reveal>
-            </div>
-            <Reveal
-              as="h3"
-              className="mt-2 text-[clamp(1.3rem,2.6vw,1.8rem)] font-medium leading-tight tracking-tight text-foreground"
-            >
-              {project.title}
-            </Reveal>
-            <Reveal
-              as="p"
-              className="mt-3 font-sans text-sm leading-relaxed text-muted"
-            >
-              {project.description}
-            </Reveal>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {project.stack.map((tech) => (
-                <span
-                  key={tech}
-                  className="rounded-full border border-white/10 px-3 py-1 font-sans text-[11px] uppercase tracking-wide text-muted"
+                <LayoutMock variant={i} />
+              </motion.div>
+
+              <div className="mt-6 flex items-baseline justify-between">
+                <Reveal
+                  as="span"
+                  className="font-sans text-xs uppercase tracking-mega text-muted"
                 >
-                  {tech}
-                </span>
-              ))}
-            </div>
-          </motion.div>
+                  {project.no} — {project.category}
+                </Reveal>
+              </div>
+              <Reveal
+                as="h3"
+                className="mt-2 text-[clamp(1.3rem,2.6vw,1.8rem)] font-medium leading-tight tracking-tight text-foreground"
+              >
+                {project.title}
+              </Reveal>
+              <Reveal
+                as="p"
+                className="mt-3 font-sans text-sm leading-relaxed text-muted"
+              >
+                {project.description}
+              </Reveal>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {project.stack.map((tech) => (
+                  <span
+                    key={tech}
+                    className="rounded-full border border-white/10 px-3 py-1 font-sans text-[11px] uppercase tracking-wide text-muted"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </motion.div>
+          </Link>
         ))}
       </div>
     </section>
