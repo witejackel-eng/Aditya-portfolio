@@ -23,7 +23,7 @@ export default function Hero() {
         <HeroScene />
       </div>
 
-      <div className="relative z-10 px-6 md:px-10">
+      <div className="relative z-10 max-w-[70%] px-6 md:max-w-[46%] md:px-10">
         <Reveal
           as="div"
           trigger="load"
@@ -34,14 +34,14 @@ export default function Hero() {
         </Reveal>
       </div>
 
-      <div className="relative z-10 px-6 md:px-10">
+      <div className="relative z-10 max-w-[78%] px-6 md:max-w-[52%] md:px-10">
         <h1 className="font-sans font-medium leading-[0.82] tracking-tightest text-foreground">
           <Reveal
             as="span"
             trigger="load"
             delay={0.2}
             duration={1.1}
-            className="text-[clamp(4.5rem,17vw,15rem)]"
+            className="text-[clamp(4rem,13vw,11rem)]"
           >
             ADITYA
           </Reveal>
