@@ -1,0 +1,32 @@
+{
+  "name": "aditya-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Editorial personal portfolio for Aditya Singh Sikarwar — economics student, independent trader & visual creator.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "^14.2.35",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "framer-motion": "^11.3.19",
+    "three": "^0.166.1",
+    "@react-three/fiber": "^8.16.8",
+    "@react-three/drei": "^9.108.4",
+    "lenis": "^1.1.6"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@types/three": "^0.166.0",
+    "typescript": "^5.5.3",
+    "tailwindcss": "^3.4.7",
+    "postcss": "^8.4.40",
+    "autoprefixer": "^10.4.19"
+  }
+}
