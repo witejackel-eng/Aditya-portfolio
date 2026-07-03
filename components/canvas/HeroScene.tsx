@@ -1,98 +1,128 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { Canvas, useFrame, type ThreeEvent } from "@react-three/fiber";
-import { MeshDistortMaterial, Sphere } from "@react-three/drei";
+import { useMemo, useRef } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
-// Swipe-to-spin tuning: an impulse-and-decay model (not a spring-to-target)
-// so a flick keeps free-spinning and eases out on its own, the way a real
-// object with momentum would — never snapping to a fixed end rotation.
-const SWIPE_IMPULSE = 18;
-const SPIN_DECAY = 0.9;
-const MAX_SPIN_VELOCITY = 12;
+const vertexShader = /* glsl */ `
+  varying vec2 vUv;
+  void main() {
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+`;
 
-function NoiseSphere() {
-  const groupRef = useRef<THREE.Group>(null);
-  const knotRef = useRef<THREE.Mesh>(null);
-  const spinVelocity = useRef(0);
-  const spinOffset = useRef(0);
-  const lastPointerX = useRef<number | null>(null);
-  const [hovered, setHovered] = useState(false);
+// A Julia-set fractal rendered on a flat, circularly-masked plane. The mask
+// and coloring both use smoothstep so the circle edge and tonal bands stay
+// anti-aliased instead of hard-stepped or pixelated.
+const fragmentShader = /* glsl */ `
+  precision highp float;
 
-  useEffect(() => {
-    document.body.style.cursor = hovered ? "grab" : "";
-    return () => {
-      document.body.style.cursor = "";
-    };
-  }, [hovered]);
+  uniform float u_time;
+  uniform vec2 u_mouse;
+  uniform float u_zoom;
+  varying vec2 vUv;
 
-  const handlePointerMove = (e: ThreeEvent<PointerEvent>) => {
-    if (lastPointerX.current !== null) {
-      const deltaX = e.pointer.x - lastPointerX.current;
-      // Only a right-to-left swipe (negative X velocity) feeds the spin.
-      if (deltaX < 0) {
-        spinVelocity.current = Math.min(
-          MAX_SPIN_VELOCITY,
-          spinVelocity.current + Math.abs(deltaX) * SWIPE_IMPULSE
-        );
+  vec3 tone(float t) {
+    vec3 c1 = vec3(0.02);
+    vec3 c2 = vec3(0.38);
+    vec3 c3 = vec3(0.80);
+    vec3 c4 = vec3(1.0);
+    vec3 col = mix(c1, c2, smoothstep(0.0, 0.32, t));
+    col = mix(col, c3, smoothstep(0.32, 0.66, t));
+    col = mix(col, c4, smoothstep(0.66, 1.0, t));
+    return col;
+  }
+
+  void main() {
+    vec2 uv = vUv - 0.5;
+
+    float dist = length(uv);
+    float mask = 1.0 - smoothstep(0.44, 0.5, dist);
+    if (mask <= 0.001) {
+      discard;
+    }
+
+    vec2 z = uv * u_zoom;
+
+    // Dragon-Julia base constant, drifting slowly on its own and nudged by
+    // the smoothed pointer — small perturbations are deliberate, Julia sets
+    // are sensitive enough that anything larger dissolves into noise.
+    vec2 c = vec2(-0.8, 0.156);
+    c += vec2(cos(u_time * 0.045), sin(u_time * 0.037)) * 0.015;
+    c += u_mouse * 0.026;
+
+    const float maxIter = 80.0;
+    float iter = maxIter;
+    for (float i = 0.0; i < maxIter; i++) {
+      z = vec2(z.x * z.x - z.y * z.y, 2.0 * z.x * z.y) + c;
+      if (dot(z, z) > 4.0) {
+        iter = i;
+        break;
       }
     }
-    lastPointerX.current = e.pointer.x;
-  };
 
-  const handlePointerOver = () => setHovered(true);
-  const handlePointerOut = () => {
-    setHovered(false);
-    lastPointerX.current = null;
-  };
+    float smoothIter = iter;
+    if (iter < maxIter) {
+      float logZn = log(dot(z, z)) * 0.5;
+      float nu = log(logZn / log(2.0)) / log(2.0);
+      smoothIter = iter + 1.0 - nu;
+    }
 
-  useFrame((state, delta) => {
+    float t = clamp(smoothIter / maxIter, 0.0, 1.0);
+    vec3 color = tone(t);
+
+    gl_FragColor = vec4(color, mask * 0.92);
+  }
+`;
+
+function FractalDisc() {
+  const materialRef = useRef<THREE.ShaderMaterial>(null);
+  const smoothedMouse = useRef(new THREE.Vector2(0, 0));
+  const prevMouse = useRef(new THREE.Vector2(0, 0));
+  const zoom = useRef(2.6);
+
+  const uniforms = useMemo(
+    () => ({
+      u_time: { value: 0 },
+      u_mouse: { value: new THREE.Vector2(0, 0) },
+      u_zoom: { value: 2.6 },
+    }),
+    []
+  );
+
+  useFrame((state) => {
     const { pointer, clock } = state;
 
-    spinOffset.current += spinVelocity.current * delta;
-    spinVelocity.current *= Math.pow(SPIN_DECAY, delta * 60);
+    // Lerp toward the raw pointer for fluid inertia rather than a 1:1 snap.
+    smoothedMouse.current.lerp(pointer, 0.06);
 
-    if (groupRef.current) {
-      const targetTiltX = pointer.y * 0.18;
-      groupRef.current.rotation.x = THREE.MathUtils.lerp(
-        groupRef.current.rotation.x,
-        targetTiltX,
-        0.04
-      );
-      groupRef.current.rotation.y = clock.elapsedTime * 0.05 + spinOffset.current;
-    }
-    if (knotRef.current) {
-      knotRef.current.rotation.y -= delta * 0.06;
-      knotRef.current.rotation.x += delta * 0.02;
+    const velocity = smoothedMouse.current.distanceTo(prevMouse.current);
+    prevMouse.current.copy(smoothedMouse.current);
+
+    const targetZoom = 2.6 - Math.min(velocity * 8, 0.3);
+    zoom.current = THREE.MathUtils.lerp(zoom.current, targetZoom, 0.08);
+
+    const material = materialRef.current;
+    if (material) {
+      material.uniforms.u_time.value = clock.elapsedTime;
+      material.uniforms.u_mouse.value.copy(smoothedMouse.current);
+      material.uniforms.u_zoom.value = zoom.current;
     }
   });
 
   return (
-    <group ref={groupRef} position={[1.3, -0.1, -1]}>
-      <Sphere
-        args={[0.95, 128, 128]}
-        onPointerOver={handlePointerOver}
-        onPointerOut={handlePointerOut}
-        onPointerMove={handlePointerMove}
-      >
-        <MeshDistortMaterial
-          color="#1c1c1a"
-          emissive="#161616"
-          emissiveIntensity={0.6}
-          distort={0.4}
-          speed={1.2}
-          roughness={0.28}
-          metalness={0.35}
-          transparent
-          opacity={0.65}
-        />
-      </Sphere>
-      <mesh ref={knotRef} scale={0.62}>
-        <torusKnotGeometry args={[1.4, 0.32, 220, 24]} />
-        <meshBasicMaterial color="#f5f5f5" wireframe transparent opacity={0.22} />
-      </mesh>
-    </group>
+    <mesh position={[1.3, -0.1, -1]}>
+      <planeGeometry args={[2.6, 2.6]} />
+      <shaderMaterial
+        ref={materialRef}
+        uniforms={uniforms}
+        vertexShader={vertexShader}
+        fragmentShader={fragmentShader}
+        transparent
+        depthWrite={false}
+      />
+    </mesh>
   );
 }
 
@@ -104,10 +134,7 @@ export default function HeroScene() {
       gl={{ antialias: true, alpha: true }}
       className="!absolute inset-0"
     >
-      <ambientLight intensity={0.45} />
-      <directionalLight position={[3, 3, 4]} intensity={1.7} />
-      <pointLight position={[-4, -2, -3]} intensity={0.5} color="#ffffff" />
-      <NoiseSphere />
+      <FractalDisc />
     </Canvas>
   );
 }
