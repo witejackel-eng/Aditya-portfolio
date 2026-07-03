@@ -100,10 +100,8 @@ export const caseStudies: CaseStudy[] = [
 ];
 
 export const contact = {
-  email: "hello@aditya.dev",
-  socials: [
-    { label: "GitHub", href: "https://github.com/witejackel-eng" },
-    { label: "Instagram", href: "#" },
-    { label: "LinkedIn", href: "#" },
-  ],
+  email: "hi.aditya.dev@gmail.com",
+  phone: "+919310736542",
+  phoneDisplay: "+91 93107 36542",
+  github: "https://github.com/witejackel-eng",
 };

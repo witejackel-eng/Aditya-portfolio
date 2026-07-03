@@ -14,7 +14,7 @@ export default function Hero() {
       id="top"
       className="relative flex min-h-[100svh] flex-col justify-between overflow-hidden pt-28 pb-10 md:pt-32"
     >
-      <div className="pointer-events-none absolute inset-0">
+      <div className="absolute inset-0">
         <HeroScene />
       </div>
 

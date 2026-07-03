@@ -39,7 +39,7 @@ export default function Contact() {
         </Reveal>
       </div>
 
-      <div className="grid grid-cols-2 gap-8 border-t border-white/10 pt-10 md:grid-cols-4">
+      <div className="grid grid-cols-1 gap-8 border-t border-white/10 pt-10 sm:grid-cols-3">
         <div>
           <Reveal
             as="div"
@@ -48,24 +48,48 @@ export default function Contact() {
             Email
           </Reveal>
           <Reveal as="div" className="font-sans text-sm text-foreground">
-            <a href={`mailto:${contact.email}`}>{contact.email}</a>
+            <a
+              href={`mailto:${contact.email}`}
+              className="transition-opacity duration-300 hover:opacity-60"
+            >
+              {contact.email}
+            </a>
           </Reveal>
         </div>
-        {contact.socials.map((s) => (
-          <div key={s.label}>
-            <Reveal
-              as="div"
-              className="mb-2 font-sans text-xs uppercase tracking-mega text-muted"
+        <div>
+          <Reveal
+            as="div"
+            className="mb-2 font-sans text-xs uppercase tracking-mega text-muted"
+          >
+            Phone
+          </Reveal>
+          <Reveal as="div" className="font-sans text-sm text-foreground">
+            <a
+              href={`tel:${contact.phone}`}
+              className="transition-opacity duration-300 hover:opacity-60"
             >
-              {s.label}
-            </Reveal>
-            <Reveal as="div" className="font-sans text-sm text-foreground">
-              <a href={s.href} target="_blank" rel="noopener noreferrer">
-                {s.label}
-              </a>
-            </Reveal>
-          </div>
-        ))}
+              {contact.phoneDisplay}
+            </a>
+          </Reveal>
+        </div>
+        <div>
+          <Reveal
+            as="div"
+            className="mb-2 font-sans text-xs uppercase tracking-mega text-muted"
+          >
+            GitHub
+          </Reveal>
+          <Reveal as="div" className="font-sans text-sm text-foreground">
+            <a
+              href={contact.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-opacity duration-300 hover:opacity-60"
+            >
+              witejackel-eng
+            </a>
+          </Reveal>
+        </div>
       </div>
 
       <div className="mt-10 flex items-center justify-between font-sans text-xs uppercase tracking-mega text-muted">
