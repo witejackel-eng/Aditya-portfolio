@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import ParticleNetwork from "./ParticleNetwork";
 import Reveal from "./Reveal";
 import { profile } from "@/lib/data";
 
@@ -14,6 +15,10 @@ export default function Hero() {
       id="top"
       className="relative flex min-h-[100svh] flex-col justify-between overflow-hidden pt-28 pb-10 md:pt-32"
     >
+      <div className="absolute inset-0">
+        <ParticleNetwork />
+      </div>
+
       <div className="absolute inset-0">
         <HeroScene />
       </div>

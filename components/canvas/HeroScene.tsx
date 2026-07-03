@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { useEffect, useMemo, useRef } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
 const vertexShader = /* glsl */ `
@@ -77,7 +77,19 @@ const fragmentShader = /* glsl */ `
 `;
 
 function FractalDisc() {
+  const { gl } = useThree();
   const materialRef = useRef<THREE.ShaderMaterial>(null);
+
+  // Tracked manually via a window-level listener + getBoundingClientRect,
+  // rather than R3F's built-in state.pointer — that value is derived from
+  // the browser's native offsetX/offsetY, which several embedded/automated
+  // contexts (and any synthetically dispatched event) never populate.
+  // clientX/clientY are always reliable, so this path is more robust.
+  const rawPointer = useRef({
+    x: typeof window !== "undefined" ? window.innerWidth / 2 : 0,
+    y: typeof window !== "undefined" ? window.innerHeight / 2 : 0,
+  });
+  const targetPointer = useRef(new THREE.Vector2(0, 0));
   const smoothedMouse = useRef(new THREE.Vector2(0, 0));
   const prevMouse = useRef(new THREE.Vector2(0, 0));
   const zoom = useRef(2.6);
@@ -91,11 +103,28 @@ function FractalDisc() {
     []
   );
 
+  useEffect(() => {
+    const handleMove = (e: PointerEvent) => {
+      rawPointer.current.x = e.clientX;
+      rawPointer.current.y = e.clientY;
+    };
+    window.addEventListener("pointermove", handleMove);
+    return () => window.removeEventListener("pointermove", handleMove);
+  }, []);
+
   useFrame((state) => {
-    const { pointer, clock } = state;
+    const { clock } = state;
+
+    const rect = gl.domElement.getBoundingClientRect();
+    const ndcX = ((rawPointer.current.x - rect.left) / rect.width) * 2 - 1;
+    const ndcY = -(((rawPointer.current.y - rect.top) / rect.height) * 2 - 1);
+    targetPointer.current.set(
+      THREE.MathUtils.clamp(ndcX, -1.5, 1.5),
+      THREE.MathUtils.clamp(ndcY, -1.5, 1.5)
+    );
 
     // Lerp toward the raw pointer for fluid inertia rather than a 1:1 snap.
-    smoothedMouse.current.lerp(pointer, 0.06);
+    smoothedMouse.current.lerp(targetPointer.current, 0.06);
 
     const velocity = smoothedMouse.current.distanceTo(prevMouse.current);
     prevMouse.current.copy(smoothedMouse.current);
