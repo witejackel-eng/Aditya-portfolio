@@ -69,26 +69,28 @@ function NoiseSphere() {
   });
 
   return (
-    <group ref={groupRef} position={[0, 0, -1]}>
+    <group ref={groupRef} position={[1.3, -0.1, -1]}>
       <Sphere
-        args={[1.05, 96, 96]}
+        args={[0.95, 128, 128]}
         onPointerOver={handlePointerOver}
         onPointerOut={handlePointerOut}
         onPointerMove={handlePointerMove}
       >
         <MeshDistortMaterial
-          color="#0f0f0e"
+          color="#1c1c1a"
+          emissive="#161616"
+          emissiveIntensity={0.6}
           distort={0.4}
           speed={1.2}
-          roughness={0.1}
-          metalness={0.85}
+          roughness={0.28}
+          metalness={0.35}
           transparent
-          opacity={0.55}
+          opacity={0.65}
         />
       </Sphere>
-      <mesh ref={knotRef} scale={0.58}>
+      <mesh ref={knotRef} scale={0.62}>
         <torusKnotGeometry args={[1.4, 0.32, 220, 24]} />
-        <meshBasicMaterial color="#f5f5f5" wireframe transparent opacity={0.09} />
+        <meshBasicMaterial color="#f5f5f5" wireframe transparent opacity={0.22} />
       </mesh>
     </group>
   );
@@ -98,13 +100,13 @@ export default function HeroScene() {
   return (
     <Canvas
       dpr={[1, 2]}
-      camera={{ position: [0, 0, 4.8], fov: 35 }}
+      camera={{ position: [0, 0, 4.6], fov: 35 }}
       gl={{ antialias: true, alpha: true }}
       className="!absolute inset-0"
     >
-      <ambientLight intensity={0.25} />
-      <directionalLight position={[3, 3, 4]} intensity={1.6} />
-      <pointLight position={[-4, -2, -3]} intensity={0.3} color="#ffffff" />
+      <ambientLight intensity={0.45} />
+      <directionalLight position={[3, 3, 4]} intensity={1.7} />
+      <pointLight position={[-4, -2, -3]} intensity={0.5} color="#ffffff" />
       <NoiseSphere />
     </Canvas>
   );

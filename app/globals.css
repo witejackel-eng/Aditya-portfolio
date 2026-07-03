@@ -46,3 +46,10 @@ html.lenis {
 .lenis.lenis-smooth iframe {
   pointer-events: none;
 }
+
+/* Custom cursor: only applied once CustomCursor confirms a fine pointer */
+html.cursor-none,
+html.cursor-none a,
+html.cursor-none button {
+  cursor: none !important;
+}
