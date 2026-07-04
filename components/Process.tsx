@@ -5,7 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import SectionLabel from "./SectionLabel";
 import BackgroundFX from "./BackgroundFX";
 import Reveal from "./Reveal";
-import { process } from "@/lib/data";
+import { processSteps } from "@/lib/data";
 
 export default function Process() {
   const ref = useRef<HTMLDivElement>(null);
@@ -29,7 +29,7 @@ export default function Process() {
         </div>
 
         <div className="flex flex-col gap-12 md:gap-16">
-          {process.map((step) => (
+          {processSteps.map((step) => (
             <Reveal key={step.no} as="div" className="relative pl-10 md:pl-14">
               <span className="absolute left-0 top-0 flex h-7 w-7 items-center justify-center rounded-full border border-white/15 bg-background font-sans text-[10px] uppercase tracking-wide text-muted md:h-9 md:w-9">
                 {step.no}

@@ -4,7 +4,7 @@
  * custom domain is attached.
  */
 export const siteUrl =
-  globalThis.process?.env.NEXT_PUBLIC_SITE_URL ??
+  (typeof process !== "undefined" ? process.env.NEXT_PUBLIC_SITE_URL : undefined) ??
   "https://aditya-portfolio.vercel.app";
 
 export const profile = {
@@ -97,7 +97,7 @@ export interface ProcessStep {
   body: string;
 }
 
-export const process: ProcessStep[] = [
+export const processSteps: ProcessStep[] = [
   {
     no: "01",
     title: "Discovery",

@@ -5,7 +5,7 @@
  */
 export const projectLinks: Record<string, string> = {
   aperture: "",
-  sequence: "",
+  sequence: "https://corporate-leadgen-platform-jet.vercel.app/",
   depth: "",
 };
 
