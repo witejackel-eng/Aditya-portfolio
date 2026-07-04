@@ -1,3 +1,12 @@
+/**
+ * Canonical production URL. Falls back to the default Vercel URL this repo
+ * would get if deployed unmodified — set NEXT_PUBLIC_SITE_URL once a real
+ * custom domain is attached.
+ */
+export const siteUrl =
+  globalThis.process?.env.NEXT_PUBLIC_SITE_URL ??
+  "https://aditya-portfolio.vercel.app";
+
 export const profile = {
   name: "Aditya",
   title: "Front-End Developer & UI/UX Designer",

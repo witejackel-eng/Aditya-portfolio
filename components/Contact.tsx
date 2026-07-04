@@ -14,6 +14,7 @@ export default function Contact() {
       id="contact"
       className="relative z-10 flex min-h-[90svh] flex-col justify-between px-6 py-28 md:px-10 md:py-40"
     >
+      <h2 className="sr-only">Contact</h2>
       <div className="flex items-center justify-between border-b border-white/10 pb-6">
         <Reveal
           as="span"
@@ -50,6 +51,7 @@ export default function Contact() {
           >
             <a
               href={`mailto:${contact.email}`}
+              aria-label={`Email Aditya at ${contact.email}`}
               className="inline-block transition-opacity duration-300 hover:opacity-60"
             >
               Let&rsquo;s work
@@ -105,6 +107,7 @@ export default function Contact() {
               href={contact.github}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Aditya's GitHub profile (opens in a new tab)"
               className="transition-opacity duration-300 hover:opacity-60"
             >
               witejackel-eng

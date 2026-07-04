@@ -20,11 +20,11 @@ export default function Hero() {
       id="top"
       className="relative flex min-h-[100svh] flex-col justify-between overflow-hidden pt-28 pb-10 md:pt-32"
     >
-      <div className="absolute inset-0">
+      <div className="absolute inset-0" aria-hidden="true">
         <ParticleNetwork />
       </div>
 
-      <div className="absolute inset-0">
+      <div className="absolute inset-0" aria-hidden="true">
         <HeroScene />
       </div>
 
@@ -104,6 +104,7 @@ export default function Hero() {
           >
             <a
               href={`mailto:${contact.email}`}
+              aria-label={`Email Aditya at ${contact.email}`}
               className="font-sans text-xs uppercase tracking-mega text-muted transition-opacity duration-300 hover:opacity-60"
             >
               Get in touch

@@ -49,7 +49,7 @@ export default function CustomCursor() {
   const expanded = label !== null;
 
   return (
-    <>
+    <div aria-hidden="true">
       {/* Soft trailing glow — a radial-gradient div, not a blur filter, so
           it stays cheap to composite every frame alongside the R3F canvas. */}
       <motion.div
@@ -90,6 +90,6 @@ export default function CustomCursor() {
           {label ?? ""}
         </span>
       </motion.div>
-    </>
+    </div>
   );
 }

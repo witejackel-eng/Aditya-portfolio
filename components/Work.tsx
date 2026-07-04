@@ -96,8 +96,9 @@ function WorkCard({ project, variant }: { project: CaseStudy; variant: number })
 
   return (
     <motion.div variants={staggerItem} className="group">
-      <motion.div
+      <motion.article
         ref={ref}
+        aria-label={`${project.title} — ${project.category}`}
         onMouseMove={handleMouseMove}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={handleMouseLeave}
@@ -205,6 +206,7 @@ function WorkCard({ project, variant }: { project: CaseStudy; variant: number })
                   href={demoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label={`View ${project.title} live (opens in a new tab)`}
                   className="inline-flex items-center gap-2 font-sans text-sm font-medium uppercase tracking-mega text-foreground transition-opacity duration-300 hover:opacity-60"
                 >
                   View Project →
@@ -212,6 +214,7 @@ function WorkCard({ project, variant }: { project: CaseStudy; variant: number })
               ) : (
                 <span
                   aria-disabled="true"
+                  aria-label={`${project.title} live link coming soon`}
                   className="inline-flex cursor-not-allowed items-center gap-2 font-sans text-sm font-medium uppercase tracking-mega text-muted/50"
                 >
                   View Project →
@@ -229,6 +232,7 @@ function WorkCard({ project, variant }: { project: CaseStudy; variant: number })
                   href={githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label={`View source for ${project.title} on GitHub (opens in a new tab)`}
                   className="font-sans text-xs uppercase tracking-mega text-muted transition-opacity duration-300 hover:opacity-60"
                 >
                   GitHub
@@ -237,7 +241,7 @@ function WorkCard({ project, variant }: { project: CaseStudy; variant: number })
             )}
           </div>
         </div>
-      </motion.div>
+      </motion.article>
     </motion.div>
   );
 }
