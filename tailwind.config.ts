@@ -11,10 +11,12 @@ const config: Config = {
         background: "#000000",
         foreground: "#f5f5f5",
         muted: "#8a8a8a",
+        accent: "#6E7BFF",
       },
       boxShadow: {
         hairline: "0 1px 0 0 rgba(255,255,255,0.08)",
         card: "0 30px 60px -20px rgba(0,0,0,0.6)",
+        glow: "0 0 80px -20px rgba(110,123,255,0.35)",
       },
       fontFamily: {
         sans: ["var(--font-inter)", "Helvetica Neue", "Arial", "sans-serif"],

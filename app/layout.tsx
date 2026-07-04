@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import CustomCursor from "@/components/CustomCursor";
+import { CursorProvider } from "@/components/CursorContext";
+import Loader from "@/components/Loader";
 import PageTransition from "@/components/PageTransition";
 import SmoothScroll from "@/components/SmoothScroll";
 import "./globals.css";
@@ -25,10 +27,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <body className="bg-background font-sans text-foreground antialiased">
-        <CustomCursor />
-        <SmoothScroll>
-          <PageTransition>{children}</PageTransition>
-        </SmoothScroll>
+        <Loader />
+        <CursorProvider>
+          <CustomCursor />
+          <SmoothScroll>
+            <PageTransition>{children}</PageTransition>
+          </SmoothScroll>
+        </CursorProvider>
       </body>
     </html>
   );

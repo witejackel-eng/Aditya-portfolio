@@ -1,23 +1,13 @@
 import Reveal from "./Reveal";
+import SectionLabel from "./SectionLabel";
+import BackgroundFX from "./BackgroundFX";
 import { services } from "@/lib/data";
 
 export default function Services() {
   return (
     <section id="services" className="relative z-10 px-6 py-28 md:px-10 md:py-40">
-      <div className="mb-12 flex items-center justify-between border-b border-white/10 pb-6 md:mb-20">
-        <Reveal
-          as="h2"
-          className="text-[clamp(2rem,6vw,3.5rem)] font-medium leading-none tracking-tightest"
-        >
-          Services
-        </Reveal>
-        <Reveal
-          as="span"
-          className="font-sans text-xs uppercase tracking-mega text-muted"
-        >
-          02 / What I Do
-        </Reveal>
-      </div>
+      <BackgroundFX />
+      <SectionLabel heading="Services" label="02 / What I Do" />
 
       <div>
         {services.map((service) => (

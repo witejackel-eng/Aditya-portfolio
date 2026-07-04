@@ -1,8 +1,14 @@
+"use client";
+
 import Reveal from "./Reveal";
 import Clock from "./Clock";
-import { contact } from "@/lib/data";
+import MagneticButton from "./MagneticButton";
+import { useCursor } from "./CursorContext";
+import { contact, siteMeta } from "@/lib/data";
 
 export default function Contact() {
+  const { setLabel } = useCursor();
+
   return (
     <section
       id="contact"
@@ -13,7 +19,7 @@ export default function Contact() {
           as="span"
           className="font-sans text-xs uppercase tracking-mega text-muted"
         >
-          04 / Contact
+          06 / Contact
         </Reveal>
         <Reveal
           as="span"
@@ -25,21 +31,36 @@ export default function Contact() {
 
       <div className="py-16 md:py-24">
         <Reveal
-          as="div"
-          className="text-[clamp(2.6rem,10vw,7.5rem)] font-medium leading-[0.9] tracking-tightest text-foreground"
+          as="p"
+          className="max-w-xl font-sans text-base leading-relaxed text-muted md:text-lg"
         >
-          <a
-            href={`mailto:${contact.email}`}
-            className="inline-block transition-opacity duration-300 hover:opacity-60"
+          Have an interface that needs to feel faster? A product that needs a
+          design system? Let&rsquo;s build it.
+        </Reveal>
+        <Reveal
+          as="div"
+          delay={0.1}
+          className="mt-6 text-[clamp(2.6rem,10vw,7.5rem)] font-medium leading-[0.9] tracking-tightest text-foreground"
+        >
+          <MagneticButton
+            strength={0.15}
+            className="inline-block"
+            onHoverStart={() => setLabel("Say hi")}
+            onHoverEnd={() => setLabel(null)}
           >
-            Let&rsquo;s work
-            <br />
-            together →
-          </a>
+            <a
+              href={`mailto:${contact.email}`}
+              className="inline-block transition-opacity duration-300 hover:opacity-60"
+            >
+              Let&rsquo;s work
+              <br />
+              together →
+            </a>
+          </MagneticButton>
         </Reveal>
       </div>
 
-      <div className="grid grid-cols-1 gap-8 border-t border-white/10 pt-10 sm:grid-cols-3">
+      <div className="grid grid-cols-2 gap-8 border-t border-white/10 pt-10 sm:grid-cols-4">
         <div>
           <Reveal
             as="div"
@@ -90,10 +111,24 @@ export default function Contact() {
             </a>
           </Reveal>
         </div>
+        <div>
+          <Reveal
+            as="div"
+            className="mb-2 font-sans text-xs uppercase tracking-mega text-muted"
+          >
+            Location
+          </Reveal>
+          <Reveal as="div" className="font-sans text-sm text-foreground">
+            {contact.location}
+          </Reveal>
+        </div>
       </div>
 
-      <div className="mt-10 flex items-center justify-between font-sans text-xs uppercase tracking-mega text-muted">
-        <span>© {new Date().getFullYear()} Aditya</span>
+      <div className="mt-10 flex flex-col gap-4 font-sans text-xs uppercase tracking-mega text-muted sm:flex-row sm:items-center sm:justify-between">
+        <span>
+          © {new Date().getFullYear()} Aditya — Built with {siteMeta.builtWith}{" "}
+          — v{siteMeta.version}
+        </span>
         <a href="#top" className="transition-opacity hover:opacity-60">
           Back to top ↑
         </a>

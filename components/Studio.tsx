@@ -1,23 +1,13 @@
 import Reveal from "./Reveal";
+import SectionLabel from "./SectionLabel";
+import BackgroundFX from "./BackgroundFX";
 import { studio } from "@/lib/data";
 
 export default function Studio() {
   return (
     <section id="studio" className="relative z-10 px-6 py-28 md:px-10 md:py-40">
-      <div className="mb-12 flex items-center justify-between border-b border-white/10 pb-6 md:mb-20">
-        <Reveal
-          as="h2"
-          className="text-[clamp(2rem,6vw,3.5rem)] font-medium leading-none tracking-tightest"
-        >
-          Studio
-        </Reveal>
-        <Reveal
-          as="span"
-          className="font-sans text-xs uppercase tracking-mega text-muted"
-        >
-          {studio.label}
-        </Reveal>
-      </div>
+      <BackgroundFX />
+      <SectionLabel heading="Studio" label={studio.label} />
 
       <Reveal
         as="p"

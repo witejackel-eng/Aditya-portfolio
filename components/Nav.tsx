@@ -1,28 +1,44 @@
 "use client";
 
 import Clock from "./Clock";
+import MagneticButton from "./MagneticButton";
+import { useCursor } from "./CursorContext";
 import { nav } from "@/lib/data";
 
 export default function Nav() {
+  const { setLabel } = useCursor();
+
   return (
     <header className="fixed inset-x-0 top-0 z-50 flex items-center justify-between px-6 py-6 md:px-10 md:py-8">
-      <a
-        href="#top"
-        className="font-sans text-xs uppercase tracking-mega text-foreground"
+      <MagneticButton
+        strength={0.25}
+        onHoverStart={() => setLabel("Top")}
+        onHoverEnd={() => setLabel(null)}
       >
-        Aditya
-      </a>
+        <a
+          href="#top"
+          className="font-sans text-xs uppercase tracking-mega text-foreground"
+        >
+          Aditya
+        </a>
+      </MagneticButton>
 
       <nav className="hidden gap-8 font-sans text-xs uppercase tracking-mega text-foreground md:flex">
         {nav.map((item) => (
-          <a
+          <MagneticButton
             key={item.no}
-            href={item.href}
-            className="group flex items-center gap-2 transition-opacity duration-300 hover:opacity-60"
+            strength={0.3}
+            onHoverStart={() => setLabel(item.label)}
+            onHoverEnd={() => setLabel(null)}
           >
-            <span className="text-muted">{item.no}</span>
-            {item.label}
-          </a>
+            <a
+              href={item.href}
+              className="group flex items-center gap-2 transition-opacity duration-300 hover:opacity-60"
+            >
+              <span className="text-muted">{item.no}</span>
+              {item.label}
+            </a>
+          </MagneticButton>
         ))}
       </nav>
 
